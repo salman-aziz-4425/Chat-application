@@ -4,7 +4,7 @@
 
 # Preview
 
-![image](https://github.com/salman-aziz-4425/Chat-application-FE/assets/85288719/a719185e-9f9b-4d07-bad8-cd70f985a051)
+![image](https://github.com/salman-aziz-4425/shadcn-chat/assets/85288719/119d19db-cb43-4834-adc0-0df9dbeed590)
 
 # Usage
 
