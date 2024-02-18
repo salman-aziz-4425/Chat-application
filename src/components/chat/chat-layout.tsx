@@ -19,8 +19,11 @@ import { Message } from '@/types';
 
 export default function ChatLayout() {
   const [isMobile, setIsMobile] = React.useState(false);
+  const [roomMessages, setRoomMessages] = React.useState([] as any);
+
   React.useEffect(() => {
     window.screen.width <= 629 ? setIsMobile(true) : setIsMobile(false);
+    setRoomMessages(userData[0]);
   }, []);
 
   return (
@@ -37,16 +40,19 @@ export default function ChatLayout() {
         <div className='flex flex-col justify-between h-full w-full'>
           <ChatTopbar />
           <MessageList
-            key={userData[0].id}
+            key={roomMessages.id}
             messages={
-              (userData[0]?.messages || []).map((data) => ({
+              (roomMessages?.messages || []).map((data: any) => ({
                 id: data?.id,
                 author: data?.name,
                 content: data?.message,
               })) as Message[]
             }
           />
-          <ChatBottomBar />
+          <ChatBottomBar
+            Messages={roomMessages}
+            roomMessages={setRoomMessages}
+          />
         </div>
       </ResizablePanel>
     </ResizablePanelGroup>
