@@ -15,15 +15,15 @@ import MessageList from './chat-list';
 import ChatSidebar from './chat-sidebar';
 import ChatTopbar from './chat-topbar';
 
-import { Message } from '@/types';
+import { Message, singleMessage } from '@/types';
 
 export default function ChatLayout() {
   const [isMobile, setIsMobile] = React.useState(false);
-  const [roomMessages, setRoomMessages] = React.useState([] as any);
+  const [roomMessages, setRoomMessages] = React.useState<Message>();
 
   React.useEffect(() => {
     window.screen.width <= 629 ? setIsMobile(true) : setIsMobile(false);
-    setRoomMessages(userData[0]);
+    setRoomMessages(userData[0] as unknown as Message);
   }, []);
 
   return (
@@ -40,13 +40,13 @@ export default function ChatLayout() {
         <div className='flex flex-col justify-between h-full w-full'>
           <ChatTopbar />
           <MessageList
-            key={roomMessages.id}
+            key={roomMessages?.id}
             messages={
-              (roomMessages?.messages || []).map((data: any) => ({
+              (roomMessages?.messages || []).map((data: singleMessage) => ({
                 id: data?.id,
                 author: data?.name,
                 content: data?.message,
-              })) as Message[]
+              })) as unknown as  Message[]
             }
           />
           <ChatBottomBar

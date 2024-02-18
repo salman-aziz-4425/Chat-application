@@ -2,12 +2,11 @@ import React, { useState } from 'react';
 
 import Button from '../buttons/Button';
 
-import { singleMessage } from '@/types';
 
-interface ChatBottomBarProps {
-  roomqMessages: (Messages: any) => void;
-  Messages: singleMessage;
-}
+// interface ChatBottomBarProps {
+//   roomMessages: React.Dispatch<React.SetStateAction<singleMessage[]>>;
+//   Messages: singleMessage;
+// }
 
 export default function ChatBottomBar({ roomMessages, Messages }: any) {
   const [Message, setMessages] = useState('');
