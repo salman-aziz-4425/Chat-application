@@ -18,7 +18,6 @@ These components in particular:
 
 # Installation
 
-If you'd like to spin up a local environment similar to the [demo](https://shadcn-chat.vercel.app/), follow these instructions:
 
 **1. Clone the repository to a directory on your pc via command prompt:**
 
