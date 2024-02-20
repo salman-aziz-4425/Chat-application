@@ -6,7 +6,6 @@ pipeline {
             steps {
                 echo 'Building the project...'
                 sh 'docker build -t nextjs-app .'
-                // Add your build commands here
             }
         }
         stage('Deploy') {

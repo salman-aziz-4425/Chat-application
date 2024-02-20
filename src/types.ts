@@ -4,7 +4,7 @@ export interface Message {
   messages: singleMessage[];
 }
 export interface singleMessage {
-  id: 1;
+  id: number;
   avatar: string;
   name: string;
   message: string;
