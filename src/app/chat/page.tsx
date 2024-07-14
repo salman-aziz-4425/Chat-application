@@ -24,6 +24,10 @@ const Chat = () => {
     socket.current = io('http://localhost:5000');
     socket.current.emit('user_online', { email: currentUserEmail });
     void fetchChatUsers();
+    return () => {
+      socket.current.emit("user_offline", { email: currentUserEmail });
+      socket.current.disconnect();
+    }
   }, []);
 
   const handleLogout = () => {
@@ -51,25 +55,27 @@ const Chat = () => {
   };
 
   return (
-    <div className='bg-gradient-to-r h-screen from-green-900 to-black'>
-      <div className='flex flex-col h-screen px-4 lg:px-0 w-full justify-center items-center py-20'>
-        <div className='z-10 rounded-lg max-w-5xl w-full h-full text-sm lg:flex bg-white'>
-          {loading ? (
-            <div className='flex items-center justify-center h-full w-full'>
-              <p>Loading...</p>
-            </div>
-          ) : (
-            <ChatLayout socket={socket.current} />
-          )}
+    <ProtectedRoute>
+      <div className='bg-gradient-to-r h-screen from-green-900 to-black'>
+        <div className='flex flex-col h-screen px-4 lg:px-0 w-full justify-center items-center py-20'>
+          <div className='z-10 rounded-lg max-w-5xl w-full h-full text-sm lg:flex bg-white'>
+            {loading ? (
+              <div className='flex items-center justify-center h-full w-full'>
+                <p>Loading...</p>
+              </div>
+            ) : (
+              <ChatLayout socket={socket.current} />
+            )}
+          </div>
+          <button
+            onClick={handleLogout}
+            className='mt-4 px-4 py-2 bg-black text-white rounded-lg shadow-md focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-opacity-50'
+          >
+            Logout
+          </button>
         </div>
-        <button
-          onClick={handleLogout}
-          className='mt-4 px-4 py-2 bg-black text-white rounded-lg shadow-md focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-opacity-50'
-        >
-          Logout
-        </button>
       </div>
-    </div>
+    </ProtectedRoute>
   );
 };
 
