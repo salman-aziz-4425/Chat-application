@@ -36,27 +36,24 @@ const ChatLayout: React.FC<ChatLayoutProps> = ({ socket }) => {
     setSelectedMail(activeusers[0].email)
   }, [])
 
+  const handleActiveUsers = React.useCallback((activeUsers: string[]) => {
+    setOnlineUsers(activeUsers);
+  }, []);
+
+  const handleReceiveMessage = React.useCallback((message: any) => {
+    // if (message.sender !== selectedMail) { return setRoomMessages((prevMessage) => prevMessage) }
+    setRoomMessages(prevMessages => {
+      return [...prevMessages, message];
+    });
+  }, []);
+
   React.useEffect(() => {
     const updateIsMobile = () => {
       setIsMobile(window.screen.width <= 629);
     };
     updateIsMobile();
     window.addEventListener('resize', updateIsMobile);
-    const handleActiveUsers = (activeUsers: string[]) => {
-      setOnlineUsers(activeUsers);
-    };
-
-    const handleReceiveMessage = (message: any) => {
-      // if (message.sender !== selectedMail) { return setRoomMessages((prevMessage) => prevMessage) }
-      setRoomMessages(prevMessages => {
-        const lastMessage: any = prevMessages[prevMessages.length - 1];
-        if (lastMessage && lastMessage.message === message.message) {
-          return prevMessages;
-        }
-        return [...prevMessages, message];
-      });
-    };
-    if (email && socket) {
+    if (email && socket && selectedMail) {
       socket.on('active_user', handleActiveUsers);
       socket.on('receive_message', handleReceiveMessage);
     }

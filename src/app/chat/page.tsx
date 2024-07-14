@@ -25,6 +25,7 @@ const Chat = () => {
     socket.current.emit('user_online', { email: currentUserEmail });
     void fetchChatUsers();
     return () => {
+      socket.current.off("user_online")
       socket.current.emit("user_offline", { email: currentUserEmail });
       socket.current.disconnect();
     }

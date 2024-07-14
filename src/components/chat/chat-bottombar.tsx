@@ -1,20 +1,24 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Button from '../buttons/Button';
 import useBoundStore from '@/store/user/store';
 
 const ChatBottomBar = ({ roomMessages, setroomMessages, reciver, socket }: any) => {
   const { email } = useBoundStore((state) => state);
-
   const [message, setMessage] = useState('');
+
+  useEffect(() => {
+    return () => {
+      socket.off('send_message');
+    };
+  }, [socket]);
 
   const sendMessage = () => {
     if (!message.trim()) {
       return;
     }
-    console.log(roomMessages)
-    setroomMessages([...roomMessages, { sender: email, recipient: reciver, message: message }])
-    socket.emit('send_message', { sender: email, recipient: reciver, message: message });
-    console.log(`Message sent: ${message}`);
+
+    setroomMessages([...roomMessages, { sender: email, recipient: reciver, message }]);
+    socket.emit('send_message', { sender: email, recipient: reciver, message });
     setMessage('');
   };
 

@@ -4,8 +4,10 @@ import React, { useEffect, useRef } from 'react';
 import { cn } from '@/lib/utils';
 
 import NextImage from '../NextImage';
-import { Message } from '../../types';
 import useBoundStore from '@/store/user/store';
+
+import { Message } from '../../types';
+
 
 interface Props {
   messages: Message[];
@@ -15,6 +17,7 @@ interface Props {
 const MessageList: React.FC<Props> = ({ messages, selectedUser }: Props) => {
   const { email } = useBoundStore((state) => state);
   const messagesContainerRef = useRef<HTMLDivElement>(null);
+
   const scrollToBottom = () => {
     if (messagesContainerRef.current) {
       messagesContainerRef.current.scrollTop =
@@ -25,8 +28,6 @@ const MessageList: React.FC<Props> = ({ messages, selectedUser }: Props) => {
   useEffect(() => {
     scrollToBottom();
   }, [messages]);
-
-  console.log(messages)
   return (
     <div
       className='w-full overflow-y-auto overflow-x-hidden h-full flex flex-col px-4 py-4'
