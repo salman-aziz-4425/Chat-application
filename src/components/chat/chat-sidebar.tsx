@@ -1,37 +1,61 @@
-'use-client';
-
 import * as React from 'react';
-
 import NextImage from '../NextImage';
-import { userData } from '../../app/data';
+import useBoundStore from '@/store/user/store';
+import { BsCircleFill } from 'react-icons/bs'; // Import an icon for the status indicator
 
-export default function ChatSidebar() {
+type User = {
+  id: number;
+  email: string;
+  online: boolean;
+};
+
+interface ChatSidebarProps {
+  users: User[];
+  activeUsers: string[];
+  setSelectedMail: (userEmail: string) => void; // Correct type for setSelectedMail
+}
+
+const ChatSidebar: React.FC<ChatSidebarProps> = ({ users, activeUsers: onlineUsers, setSelectedMail }) => {
+  const { email: currentUserEmail } = useBoundStore((state) => state);
+
+  const activeUsers = users?.filter((userData) => userData.email !== currentUserEmail);
+
   return (
-    <div className='flex flex-col p-2 justify-center items-start '>
-      <div className='sm:flex gap-2 p-2 text-2xl  hidden'>
-        <p className='font-medium '>Chats</p>
-        <h1 className='text-zinc-300'>(4)</h1>
+    <div className='flex flex-col p-2 justify-center items-start'>
+      <div className='sm:flex gap-2 p-2 text-2xl hidden'>
+        <p className='font-medium'>Chats</p>
+        <h1 className='text-zinc-300'>({users.length})</h1>
       </div>
-      <div className='w-full flex flex-col items-start gap-2 md:p-2 '>
-        {userData.map((user) => (
-          <div
-            key={user.id}
-            className='flex items-center gap-2 md:px-4 md:py-2 w-full transition duration-800 ease-in-out  hover:bg-zinc-100 rounded-md'
-          >
-            <NextImage
-              useSkeleton
-              width={50}
-              height={50}
-              src='/User1.png'
-              alt='users'
-            />
-            <div className='sm:flex flex-col cursor-pointer hidden break-all'>
-              <p className='font-medium'>{user.name}</p>
-              <p className='text-zinc-300'>Hey, Jakob</p>
+      <div className='w-full flex flex-col items-start gap-2 md:p-2'>
+        {activeUsers?.map((user) => {
+          const name = user?.email.split('@')[0];
+          const isOnline = onlineUsers.includes(user?.email);
+          return (
+            <div
+              key={user.id}
+              className='flex items-center gap-2 md:px-4 md:py-2 w-full transition duration-800 ease-in-out hover:bg-zinc-100 rounded-md'
+              onClick={() => setSelectedMail(user?.email)}
+            >
+              <NextImage
+                useSkeleton
+                width={50}
+                height={50}
+                src='/User1.png'
+                alt='User profile'
+              />
+              <div className='flex items-center'>
+                <BsCircleFill color={isOnline ? 'green' : 'red'} className='mr-2' />
+                <div className='sm:flex flex-col cursor-pointer hidden break-all'>
+                  <p className='font-medium'>{name}</p>
+                  <p className='text-zinc-300'>{isOnline ? 'Online' : 'Offline'}</p>
+                </div>
+              </div>
             </div>
-          </div>
-        ))}
+          );
+        })}
       </div>
     </div>
   );
-}
+};
+
+export default ChatSidebar;

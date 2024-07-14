@@ -1,60 +1,106 @@
-'use client';
-
 import * as React from 'react';
+import { Socket } from 'socket.io-client';
 
 import {
   ResizableHandle,
   ResizablePanel,
   ResizablePanelGroup,
 } from '@/components/ui/resizable';
-
-import { userData } from '@/app/data';
+import { Message } from '@/types';
 
 import ChatBottomBar from './chat-bottombar';
-import MessageList from './chat-list';
 import ChatSidebar from './chat-sidebar';
 import ChatTopbar from './chat-topbar';
+import MessageList from './chat-list';
+import useBoundStore from '@/store/user/store';
 
-import { Message, singleMessage } from '@/types';
+type User = {
+  id: number;
+  email: string;
+  online: boolean;
+};
 
-export default function ChatLayout() {
+interface ChatLayoutProps {
+  socket: Socket;
+}
+
+const ChatLayout: React.FC<ChatLayoutProps> = ({ socket }) => {
+  const { email, activeusers } = useBoundStore((state) => state);
+
   const [isMobile, setIsMobile] = React.useState(false);
-  const [roomMessages, setRoomMessages] = React.useState<Message>();
+  const [roomMessages, setRoomMessages] = React.useState<Message[]>([]);
+  const [onlineUsers, setOnlineUsers] = React.useState<string[]>([]);
+  const [selectedMail, setSelectedMail] = React.useState<string>("");
 
   React.useEffect(() => {
-    window.screen.width <= 629 ? setIsMobile(true) : setIsMobile(false);
-    setRoomMessages(userData[0] as unknown as Message);
-  }, []);
+    setSelectedMail(activeusers[0].email)
+  }, [])
+
+  React.useEffect(() => {
+    const updateIsMobile = () => {
+      setIsMobile(window.screen.width <= 629);
+    };
+    updateIsMobile();
+    window.addEventListener('resize', updateIsMobile);
+    const handleActiveUsers = (activeUsers: string[]) => {
+      setOnlineUsers(activeUsers);
+    };
+
+    const handleReceiveMessage = (message: any) => {
+      // if (message.sender !== selectedMail) { return setRoomMessages((prevMessage) => prevMessage) }
+      setRoomMessages(prevMessages => {
+        const lastMessage: any = prevMessages[prevMessages.length - 1];
+        if (lastMessage && lastMessage.message === message.message) {
+          return prevMessages;
+        }
+        return [...prevMessages, message];
+      });
+    };
+    if (email && socket) {
+      socket.on('active_user', handleActiveUsers);
+      socket.on('receive_message', handleReceiveMessage);
+    }
+    return () => {
+      if (socket) {
+        socket.off('active_user', handleActiveUsers).off();
+        socket.off('receive_message', handleReceiveMessage).off();
+      }
+      window.removeEventListener('resize', updateIsMobile);
+    };
+  }, [socket, email, selectedMail]);
+
+
+  const handleUserSelection = (userEmail: string) => {
+    setSelectedMail(userEmail);
+  };
 
   return (
     <ResizablePanelGroup
-      direction='horizontal'
-      className='min-h-full max-w-full rounded-lg border box-border'
+      direction="horizontal"
+      className="min-h-full max-w-full rounded-lg border box-border"
     >
       <ResizablePanel minSize={isMobile ? 10 : 24} maxSize={isMobile ? 10 : 30}>
-        <ChatSidebar />
+        <ChatSidebar users={activeusers as User[]} activeUsers={onlineUsers} setSelectedMail={handleUserSelection} />
       </ResizablePanel>
       <ResizableHandle withHandle />
-
       <ResizablePanel minSize={25} defaultSize={35}>
-        <div className='flex flex-col justify-between h-full w-full'>
-          <ChatTopbar />
-          <MessageList
-            key={roomMessages?.id}
-            messages={
-              (roomMessages?.messages || []).map((data: singleMessage) => ({
-                id: data?.id,
-                author: data?.name,
-                content: data?.message,
-              })) as unknown as  Message[]
-            }
-          />
+        <div className="flex flex-col justify-between h-full w-full">
+          <ChatTopbar selectedUser={selectedMail} />
+          {selectedMail && <MessageList
+            selectedUser={selectedMail}
+            messages={roomMessages}
+          />}
+
           <ChatBottomBar
-            Messages={roomMessages}
-            roomMessages={setRoomMessages}
+            roomMessages={roomMessages}
+            setroomMessages={setRoomMessages}
+            socket={socket}
+            reciver={selectedMail}
           />
         </div>
       </ResizablePanel>
     </ResizablePanelGroup>
   );
-}
+};
+
+export default ChatLayout;

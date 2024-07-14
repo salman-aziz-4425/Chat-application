@@ -5,12 +5,15 @@ import { cn } from '@/lib/utils';
 
 import NextImage from '../NextImage';
 import { Message } from '../../types';
+import useBoundStore from '@/store/user/store';
 
 interface Props {
   messages: Message[];
+  selectedUser: string;
 }
 
-const MessageList: React.FC<Props> = ({ messages }: Props) => {
+const MessageList: React.FC<Props> = ({ messages, selectedUser }: Props) => {
+  const { email } = useBoundStore((state) => state);
   const messagesContainerRef = useRef<HTMLDivElement>(null);
   const scrollToBottom = () => {
     if (messagesContainerRef.current) {
@@ -23,15 +26,15 @@ const MessageList: React.FC<Props> = ({ messages }: Props) => {
     scrollToBottom();
   }, [messages]);
 
+  console.log(messages)
   return (
     <div
       className='w-full overflow-y-auto overflow-x-hidden h-full flex flex-col px-4 py-4'
       ref={messagesContainerRef}
     >
       <AnimatePresence>
-        {messages.map((message) => (
-          <motion.div
-            key={message.id}
+        {messages?.map((message) => (
+          (message.sender === selectedUser || message.recipient === selectedUser) && <motion.div
             layout
             initial={{ opacity: 0, scale: 1, y: 50, x: 0 }}
             animate={{ opacity: 1, scale: 1, y: 0, x: 0 }}
@@ -50,10 +53,10 @@ const MessageList: React.FC<Props> = ({ messages }: Props) => {
             }}
             className='py-2'
           >
-            <div className={cn(message.author === 'Jane Doe' && 'justify-end')}>
+            <div className={cn(message.sender === email && 'justify-end')}>
               <div
                 className={cn(
-                  message.author === 'Jane Doe'
+                  message.sender === email
                     ? 'flex items-center flex-row-reverse gap-2'
                     : 'flex gap-2 items-center w-full',
                 )}
@@ -68,15 +71,15 @@ const MessageList: React.FC<Props> = ({ messages }: Props) => {
                 <div
                   className={cn(
                     'bg-gray-300 flex flex-col p-3 shadow-md max-w-80 rounded-bl-lg break-all',
-                    message.author === 'Jane Doe'
+                    message.sender === email
                       ? 'bg-green-200  rounded-l-lg rounded-br-lg'
                       : 'rounded-bl-lg rounded-r-lg',
                   )}
                 >
                   <p className='text-gray-800 font-semibold'>
-                    {message.author}
+                    {message.sender}
                   </p>
-                  <p className='text-gray-800'>{message.content}</p>
+                  <p className='text-gray-800'>{message?.message}</p>
                 </div>
               </div>
             </div>

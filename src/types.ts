@@ -1,11 +1,15 @@
+
+
+
 export interface Message {
   id: number;
-  author: string;
-  messages: singleMessage[];
+  sender: string;
+  recipient?: string;
+  message: string;
 }
 export interface singleMessage {
   id: number;
-  avatar: string;
+  avatar?: string;
   name: string;
   message: string;
 }
