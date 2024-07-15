@@ -1,8 +1,7 @@
-
-import { ReactNode } from 'react';
+import { ReactNode, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
-import { useEffect } from 'react';
 import { useAuth } from '@/service/auth.service';
+import { getFromLocalStorage } from '@/lib/helper';
 
 interface ProtectedRouteProps {
   children: ReactNode;
@@ -10,12 +9,12 @@ interface ProtectedRouteProps {
 
 const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ children }) => {
   const router = useRouter();
-
-  const { isAuthenticated } = useAuth()
-
+  const { isAuthenticated } = useAuth();
 
   useEffect(() => {
-    if (!isAuthenticated()) {
+    const token = getFromLocalStorage('authToken');
+
+    if (!isAuthenticated() && !token) {
       router.push('/login');
     }
   }, []);

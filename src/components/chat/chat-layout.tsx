@@ -13,6 +13,7 @@ import ChatSidebar from './chat-sidebar';
 import ChatTopbar from './chat-topbar';
 import MessageList from './chat-list';
 import useBoundStore from '@/store/user/store';
+import { getFromLocalStorage } from '@/lib/helper';
 
 type User = {
   id: number;
@@ -25,11 +26,10 @@ interface ChatLayoutProps {
 }
 
 const ChatLayout: React.FC<ChatLayoutProps> = ({ socket }) => {
-  const { email, activeusers } = useBoundStore((state) => state);
+  const { email, activeusers, setOnlineUsers, onlineUsers } = useBoundStore((state) => state);
 
   const [isMobile, setIsMobile] = React.useState(false);
   const [roomMessages, setRoomMessages] = React.useState<Message[]>([]);
-  const [onlineUsers, setOnlineUsers] = React.useState<string[]>([]);
   const [selectedMail, setSelectedMail] = React.useState<string>("");
 
   React.useEffect(() => {
@@ -37,15 +37,17 @@ const ChatLayout: React.FC<ChatLayoutProps> = ({ socket }) => {
   }, [])
 
   const handleActiveUsers = React.useCallback((activeUsers: string[]) => {
+    console.log("active uisers")
+    console.log(activeUsers)
     setOnlineUsers(activeUsers);
-  }, []);
+  }, [socket, email]);
 
   const handleReceiveMessage = React.useCallback((message: any) => {
     // if (message.sender !== selectedMail) { return setRoomMessages((prevMessage) => prevMessage) }
     setRoomMessages(prevMessages => {
       return [...prevMessages, message];
     });
-  }, []);
+  }, [socket]);
 
   React.useEffect(() => {
     const updateIsMobile = () => {
@@ -53,15 +55,17 @@ const ChatLayout: React.FC<ChatLayoutProps> = ({ socket }) => {
     };
     updateIsMobile();
     window.addEventListener('resize', updateIsMobile);
+    console.log(email)
+    console.log(socket)
+    console.log(selectedMail)
     if (email && socket && selectedMail) {
       socket.on('active_user', handleActiveUsers);
       socket.on('receive_message', handleReceiveMessage);
     }
     return () => {
-      if (socket) {
-        socket.off('active_user', handleActiveUsers).off();
-        socket.off('receive_message', handleReceiveMessage).off();
-      }
+      const token = getFromLocalStorage("accessToken")
+      socket.off('active_user', handleActiveUsers).off();
+      socket.off('receive_message', handleReceiveMessage).off();
       window.removeEventListener('resize', updateIsMobile);
     };
   }, [socket, email, selectedMail]);
@@ -70,6 +74,9 @@ const ChatLayout: React.FC<ChatLayoutProps> = ({ socket }) => {
   const handleUserSelection = (userEmail: string) => {
     setSelectedMail(userEmail);
   };
+
+  console.log("room messages")
+  console.log(roomMessages)
 
   return (
     <ResizablePanelGroup

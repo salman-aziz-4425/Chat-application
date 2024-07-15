@@ -13,29 +13,39 @@ type User = {
   email: string;
 };
 
+let socket: any
+
+if (!socket) {
+  socket = io('http://localhost:5000', { autoConnect: false })
+}
+
 const Chat = () => {
-  const socket: any = React.useRef();
   const { logout } = useAuth();
   const { email: currentUserEmail, setActiveUsers } = useBoundStore((state) => state);
   const [loading, setLoading] = React.useState(true);
 
   React.useEffect(() => {
-    console.log("render")
-    socket.current = io('http://localhost:5000');
-    socket.current.emit('user_online', { email: currentUserEmail });
+    const socketStatus = socket.connected
+    if (!socketStatus) {
+      socket.connect()
+    }
+    socket.emit('user_online', { email: currentUserEmail });
     void fetchChatUsers();
     return () => {
-      socket.current.off("user_online")
-      socket.current.emit("user_offline", { email: currentUserEmail });
-      socket.current.disconnect();
+      if (socketStatus) {
+        socket.off("user_online")
+        socket.emit("user_offline", { email: currentUserEmail });
+        socket.disconnect();
+      }
+
     }
-  }, []);
+  }, [currentUserEmail]);
 
   const handleLogout = () => {
     if (currentUserEmail) {
-      socket.current.emit("user_offline", { email: currentUserEmail });
+      socket.emit("user_offline", { email: currentUserEmail });
     }
-    socket.current.disconnect();
+    socket.disconnect();
     logout();
   };
 
@@ -65,7 +75,7 @@ const Chat = () => {
                 <p>Loading...</p>
               </div>
             ) : (
-              <ChatLayout socket={socket.current} />
+              <ChatLayout socket={socket} />
             )}
           </div>
           <button

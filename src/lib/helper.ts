@@ -5,6 +5,13 @@ export function getFromLocalStorage(key: string): string | null {
   return null;
 }
 
+export function setFromLocalStorage(key: string, value: any): any | null {
+  if (typeof window !== 'undefined') {
+    return window.localStorage.setItem(key, value);
+  }
+  return null;
+}
+
 export function getFromSessionStorage(key: string): string | null {
   if (typeof sessionStorage !== 'undefined') {
     return sessionStorage.getItem(key);
