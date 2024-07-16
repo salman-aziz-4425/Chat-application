@@ -18,7 +18,11 @@ const ChatBottomBar = ({ roomMessages, setroomMessages, reciver, socket }: any) 
     }
 
     setroomMessages([...roomMessages, { sender: email, recipient: reciver, message }]);
-    socket.emit('send_message', { sender: email, recipient: reciver, message });
+    try {
+      socket.emit('send_message', { sender: email, recipient: reciver, message });
+    } catch {
+      alert("reconnect?")
+    }
     setMessage('');
   };
 

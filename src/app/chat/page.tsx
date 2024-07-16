@@ -20,24 +20,23 @@ if (!socket) {
 }
 
 const Chat = () => {
-  const { logout } = useAuth();
-  const { email: currentUserEmail, setActiveUsers } = useBoundStore((state) => state);
   const [loading, setLoading] = React.useState(true);
+  const { email: currentUserEmail, setActiveUsers, setOnlineUsers } = useBoundStore((state) => state);
+
+  const { logout } = useAuth();
 
   React.useEffect(() => {
     const socketStatus = socket.connected
     if (!socketStatus) {
       socket.connect()
     }
-    socket.emit('user_online', { email: currentUserEmail });
-    void fetchChatUsers();
+    if (currentUserEmail) {
+      socket.emit('user_online', { email: currentUserEmail });
+      void fetchChatUsers();
+    }
     return () => {
-      if (socketStatus) {
-        socket.off("user_online")
-        socket.emit("user_offline", { email: currentUserEmail });
-        socket.disconnect();
-      }
-
+      socket.emit("user_offline", { email: currentUserEmail });
+      socket.disconnect();
     }
   }, [currentUserEmail]);
 
