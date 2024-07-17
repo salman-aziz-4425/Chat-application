@@ -38,9 +38,10 @@ const ChatLayout: React.FC<ChatLayoutProps> = ({ socket }) => {
   }, [])
 
   const handleActiveUsers = React.useCallback((activeUsers: string[]) => {
+    console.log("active users event")
     if (!activeUsers.includes(email)) { socket.emit('user_online', { email }) }
     setOnlineUsers(activeUsers);
-  }, [socket]);
+  }, [socket, email]);
 
   const handleReceiveMessage = React.useCallback((message: any) => {
     // if (message.sender !== selectedMail) { return setRoomMessages((prevMessage) => prevMessage) }

@@ -3,7 +3,7 @@ import useBoundStore from "@/store/user/store";
 import { useRouter } from "next/navigation";
 
 export function useAuth() {
-  const { accessToken, refreshToken, setTokens, clearTokens } = useBoundStore((state) => state);
+  const { accessToken, refreshToken, setTokens, clearTokens, setOnlineUsers, setActiveUsers } = useBoundStore((state) => state);
   const router = useRouter()
 
   const login = async (email: string, password: string) => {

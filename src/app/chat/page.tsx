@@ -31,19 +31,18 @@ const Chat = () => {
       socket.connect()
     }
     if (currentUserEmail) {
+      console.log("emiting_online")
       socket.emit('user_online', { email: currentUserEmail });
       void fetchChatUsers();
     }
     return () => {
       socket.emit("user_offline", { email: currentUserEmail });
-      setOnlineUsers([])
       socket.disconnect();
     }
   }, [currentUserEmail]);
 
   const handleLogout = () => {
     if (currentUserEmail) {
-      setOnlineUsers([])
       socket.emit("user_offline", { email: currentUserEmail });
     }
     socket.disconnect();

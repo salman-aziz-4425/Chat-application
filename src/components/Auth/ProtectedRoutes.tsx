@@ -12,9 +12,7 @@ const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ children }) => {
   const { isAuthenticated } = useAuth();
 
   useEffect(() => {
-    const token = getFromLocalStorage('authToken');
-
-    if (!isAuthenticated() && !token) {
+    if (!isAuthenticated()) {
       router.push('/login');
     }
   }, []);

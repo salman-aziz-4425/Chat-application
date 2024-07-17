@@ -27,22 +27,17 @@ export const createUserSlice: StateCreator<UserState> = (set) => ({
       const payloadBase64 = accessToken.split('.')[1];
       const decodedPayload: any = JSON.parse(Buffer.from(payloadBase64, 'base64').toString('utf-8'));
       set({ email: decodedPayload.email, accessToken, refreshToken });
-      setFromLocalStorage('accessToken', accessToken);
-      setFromLocalStorage('refreshToken', refreshToken);
     } catch (error) {
       console.error('Failed to decode access token:', error);
     }
   },
 
   clearTokens: () => {
-    set({ accessToken: null, refreshToken: null });
-    setFromLocalStorage('accessToken', null);
-    setFromLocalStorage('refreshToken', null);
+    set({ accessToken: null, refreshToken: null, onlineUsers: [], activeusers: [], email: "" });
   },
 
   setActiveUsers: (activeUsers) => {
     set({ activeusers: [...activeUsers] });
-    setFromLocalStorage('activeusers', JSON.stringify(activeUsers));
   },
 
   removeActiveUser: () => {
@@ -53,6 +48,5 @@ export const createUserSlice: StateCreator<UserState> = (set) => ({
 
   setOnlineUsers: (onlineUsers) => {
     set({ onlineUsers: [...onlineUsers] });
-    setFromLocalStorage('onlineUsers', JSON.stringify(onlineUsers));
   },
 });
