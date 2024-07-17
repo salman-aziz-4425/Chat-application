@@ -89,7 +89,6 @@ const ChatLayout: React.FC<ChatLayoutProps> = ({ socket }) => {
   const handleUserSelection = (userEmail: string) => {
     setSelectedMail(userEmail);
     fetchMessages(email, userEmail);
-    // Remove messages from the selected user from ignoredMessages
     setIgnoredMessages(prevIgnoredMessages =>
       prevIgnoredMessages.filter(message => message.sender !== userEmail)
     );

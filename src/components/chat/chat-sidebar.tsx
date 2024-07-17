@@ -14,7 +14,7 @@ interface ChatSidebarProps {
   users: User[];
   activeUsers: string[];
   setSelectedMail: (userEmail: string) => void;
-  ignoredMessages: Message[]; // Add ignoredMessages prop
+  ignoredMessages: Message[];
 }
 
 const ChatSidebar: React.FC<ChatSidebarProps> = ({ users, activeUsers: onlineUsers, setSelectedMail, ignoredMessages }) => {
@@ -22,7 +22,6 @@ const ChatSidebar: React.FC<ChatSidebarProps> = ({ users, activeUsers: onlineUse
 
   const activeUsers = users?.filter((userData) => userData.email !== currentUserEmail);
 
-  // Function to count ignored messages for a specific user
   const countIgnoredMessages = (userEmail: string) => {
     return ignoredMessages.filter(message => message.sender === userEmail).length;
   };
