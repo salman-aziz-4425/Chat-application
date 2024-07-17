@@ -1,7 +1,8 @@
 import * as React from 'react';
 import NextImage from '../NextImage';
 import useBoundStore from '@/store/user/store';
-import { BsCircleFill } from 'react-icons/bs'; // Import an icon for the status indicator
+import { BsCircleFill } from 'react-icons/bs';
+import { Message } from '@/types/types';
 
 type User = {
   id: number;
@@ -12,13 +13,19 @@ type User = {
 interface ChatSidebarProps {
   users: User[];
   activeUsers: string[];
-  setSelectedMail: (userEmail: string) => void; // Correct type for setSelectedMail
+  setSelectedMail: (userEmail: string) => void;
+  ignoredMessages: Message[]; // Add ignoredMessages prop
 }
 
-const ChatSidebar: React.FC<ChatSidebarProps> = ({ users, activeUsers: onlineUsers, setSelectedMail }) => {
+const ChatSidebar: React.FC<ChatSidebarProps> = ({ users, activeUsers: onlineUsers, setSelectedMail, ignoredMessages }) => {
   const { email: currentUserEmail } = useBoundStore((state) => state);
 
   const activeUsers = users?.filter((userData) => userData.email !== currentUserEmail);
+
+  // Function to count ignored messages for a specific user
+  const countIgnoredMessages = (userEmail: string) => {
+    return ignoredMessages.filter(message => message.sender === userEmail).length;
+  };
 
   return (
     <div className='flex flex-col p-2 justify-center items-start'>
@@ -33,6 +40,8 @@ const ChatSidebar: React.FC<ChatSidebarProps> = ({ users, activeUsers: onlineUse
         {activeUsers?.map((user) => {
           const name = user?.email.split('@')[0];
           const isOnline = onlineUsers.includes(user?.email);
+          const ignoredCount = countIgnoredMessages(user.email); // Get the count of ignored messages
+
           return (
             <div
               key={user.id}
@@ -46,11 +55,18 @@ const ChatSidebar: React.FC<ChatSidebarProps> = ({ users, activeUsers: onlineUse
                 src='/User1.png'
                 alt='User profile'
               />
-              <div className='flex items-center'>
+              <div className='flex items-center w-full'>
                 <BsCircleFill color={isOnline ? 'green' : 'red'} className='mr-2' />
-                <div className='sm:flex flex-col cursor-pointer hidden break-all'>
+                <div className='sm:flex flex-col cursor-pointer hidden break-all w-full'>
                   <p className='font-medium'>{name}</p>
-                  <p className='text-zinc-300'>{isOnline ? 'Online' : 'Offline'}</p>
+                  <div className='flex justify-between w-full items-center'>
+                    <p className='text-zinc-300'>{isOnline ? 'Online' : 'Offline'}</p>
+                    {ignoredCount > 0 && (
+                      <span className="message-count-badge bg-green-500 text-white text-xs font-bold rounded-full px-2 py-1">
+                        {ignoredCount}
+                      </span>
+                    )}
+                  </div>
                 </div>
               </div>
             </div>

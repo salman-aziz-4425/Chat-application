@@ -33,6 +33,11 @@ const Chat = () => {
     if (currentUserEmail) {
       console.log("emiting_online")
       socket.emit('user_online', { email: currentUserEmail });
+      socket.on('active_user', ((activeUsers: string[]) => {
+        console.log("active users event")
+        if (!activeUsers.includes(currentUserEmail)) { socket.emit('user_online', { email: currentUserEmail }) }
+        setOnlineUsers(activeUsers);
+      }));
       void fetchChatUsers();
     }
     return () => {
