@@ -44,6 +44,7 @@ const ChatLayout: React.FC<ChatLayoutProps> = ({ socket }) => {
 
   const handleReceiveMessage = React.useCallback((message: any) => {
     // if (message.sender !== selectedMail) { return setRoomMessages((prevMessage) => prevMessage) }
+    console.log(message)
     setRoomMessages(prevMessages => {
       return [...prevMessages, message];
     });
@@ -70,6 +71,7 @@ const ChatLayout: React.FC<ChatLayoutProps> = ({ socket }) => {
   const handleUserSelection = (userEmail: string) => {
     setSelectedMail(userEmail);
   };
+
   return (
     <ResizablePanelGroup
       direction="horizontal"
