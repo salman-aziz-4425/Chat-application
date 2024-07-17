@@ -6,7 +6,7 @@ import {
   ResizablePanel,
   ResizablePanelGroup,
 } from '@/components/ui/resizable';
-import { Message } from '@/types';
+import { Message } from '@/types/types';
 
 import ChatBottomBar from './chat-bottombar';
 import ChatSidebar from './chat-sidebar';

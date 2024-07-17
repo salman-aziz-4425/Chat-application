@@ -6,7 +6,7 @@ import { cn } from '@/lib/utils';
 import NextImage from '../NextImage';
 import useBoundStore from '@/store/user/store';
 
-import { Message } from '../../types';
+import { Message } from '../../types/types';
 
 
 interface Props {
