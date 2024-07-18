@@ -43,7 +43,6 @@ const ChatLayout: React.FC<ChatLayoutProps> = ({ socket }) => {
   }, [activeusers]);
 
   const handleActiveUsers = React.useCallback((activeUsers: string[]) => {
-    console.log("active users event");
     if (!activeUsers.includes(email)) {
       socket.emit('user_online', { email });
     }
