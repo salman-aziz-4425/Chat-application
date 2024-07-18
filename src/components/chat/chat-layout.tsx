@@ -51,7 +51,7 @@ const ChatLayout: React.FC<ChatLayoutProps> = ({ socket }) => {
   }, [socket, email]);
 
   const handleReceiveMessage = React.useCallback((message: Message) => {
-    if (message.sender !== selectedMail) {
+    if (message.sender !== selectedMail && message.sender !== email) {
       setIgnoredMessages(prev => [...prev, message]);
       return;
     }
@@ -93,6 +93,8 @@ const ChatLayout: React.FC<ChatLayoutProps> = ({ socket }) => {
       prevIgnoredMessages.filter(message => message.sender !== userEmail)
     );
   };
+
+  console.log(roomMessages)
 
   return (
     <ResizablePanelGroup
