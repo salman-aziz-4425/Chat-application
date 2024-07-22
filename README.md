@@ -1,4 +1,4 @@
-![1000095948](https://github.com/user-attachments/assets/d2612a5c-7687-4fa5-b586-5b03a5267ccd)<h1 align="center">Chat Application</h1>
+# Chat Application
 
 # Preview
 
