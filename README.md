@@ -1,20 +1,8 @@
-<h1 align="center">shadcn-chat</h1>
-
-<p align="center">Customizable and re-usable chat component for you to use in your projects. Built on top of shadcn.</p>
+<h1 align="center">Chat Application</h1>
 
 # Preview
 
 ![image](https://github.com/salman-aziz-4425/shadcn-chat/assets/85288719/119d19db-cb43-4834-adc0-0df9dbeed590)
-
-# Usage
-
-You can use the source code and copy paste components into your NextJS project.
-
-These components in particular:
-
-```
-/src/app/components/chat/chat-layout.tsx, chat-topbar.tsx, chat-list.tsx & chat-bottombar.tsx
-```
 
 # Installation
 
@@ -50,3 +38,7 @@ npm run dev
 [NextJS](https://nextjs.org/) - React Framework for the Web
 
 [TailwindCSS](https://tailwindcss.com/) - Utility-first CSS framework
+
+[Shadcn Ui](https://ui.shadcn.com/docs) - Beautifully designed components that you can copy and paste into your apps. Accessible. Customizable. Open Source.
+
+[Zustand](https://zustand-demo.pmnd.rs/) - A small, fast, and scalable bearbones state management solution. Zustand has a comfy API based on hooks. It isn't boilerplatey or opinionated, but has enough convention to be explicit and flux-like.
