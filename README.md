@@ -1,8 +1,9 @@
-<h1 align="center">Chat Application</h1>
+![1000095948](https://github.com/user-attachments/assets/d2612a5c-7687-4fa5-b586-5b03a5267ccd)<h1 align="center">Chat Application</h1>
 
 # Preview
 
-![image](https://github.com/salman-aziz-4425/shadcn-chat/assets/85288719/119d19db-cb43-4834-adc0-0df9dbeed590)
+![1000095948](https://github.com/user-attachments/assets/03c97001-e1ae-4eb9-a909-e331f1525488)
+
 
 # Installation
 
