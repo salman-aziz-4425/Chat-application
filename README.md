@@ -2,8 +2,7 @@
 
 # Preview
 
-![1000095948](https://github.com/user-attachments/assets/03c97001-e1ae-4eb9-a909-e331f1525488)
-
+![image](https://github.com/user-attachments/assets/7f31485e-9e79-4680-a839-0972faac0d82)
 
 # Installation
 
